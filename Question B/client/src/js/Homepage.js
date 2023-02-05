@@ -7,10 +7,10 @@ const Homepage = ()  => {
                 <h1>Simple Ticket System</h1>
                 <h2>Choose a page   </h2>
                 <div>
-                    <a className="btn btn1" href="#">Customer View</a>
+                    <a className="btn btn1" href="/custview">Customer View</a>
                 </div>
                 <div>
-                    <a className="btn btn2" href="#">Counter Management</a>
+                    <a className="btn btn2" href="/countmng">Counter Management</a>
                 </div>
             </div>
         </div>
