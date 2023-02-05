@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         unique: true,
       },
-      lastIssuesTicket: {
+      lastIssuedTicket: {
         type: Sequelize.INTEGER
       },
       createdAt: {

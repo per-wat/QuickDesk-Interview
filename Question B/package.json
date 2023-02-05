@@ -6,7 +6,7 @@
     "sequelize": "^6.28.0"
   },
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon server.js --ignore client/",
     "start": "node server.js"
   },
   "name": "question-b",

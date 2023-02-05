@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       unique: true,
     },
-    lastIssuesTicket: DataTypes.INTEGER
+    lastIssuedTicket: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Tickets',

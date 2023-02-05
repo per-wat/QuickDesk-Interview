@@ -9,9 +9,9 @@ class Node {
 //After that we can intialize Queue class
 class Queue {
   constructor() {
-      this.head = null;
-      this.tail = null;
-      this.length = 0;
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
   }
 
   //Add value to the queue and returns the new queue
@@ -64,14 +64,28 @@ class Queue {
   getSize() {
       return this.length;
   }
+
+  //Empty out the queue
+  resetQueue() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
 }
 
-const { Counters } = require("../models");
+const { Counters, Tickets } = require("../models");
 
 const queue = new Queue();
 
-// The ticket queue
-let ticketNumbers = [];
+populateQueue = async () => {
+  const ticketData = await Tickets.findOne();
+  if(ticketData.ticketNumbers) {
+    queue.resetQueue();
+    ticketData.ticketNumbers.forEach(ticket => queue.enqueue(ticket));
+  }
+}
+
+populateQueue();
 
 // The current ticket being served
 let nowServing = null;
@@ -79,56 +93,67 @@ let nowServing = null;
 // The last issued ticket
 let lastIssuedTicket = 0;
 
-// The counters
-let counters;
-
-const getDB = async () => {
-  try {
-    counters = await Counters.findAll();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-getDB();
-
-
 // A map of functions which return data for the schema.
 module.exports = {
     Query: {
-      ticketNumbers: () => queue.getQueue(),
-      nowServing: () => nowServing,
-      lastIssuedTicket: () => queue.getQueue()[queue.getSize() - 1],
-      counter: (_, { id }) => counters.find(counter => counter.id === id),
-      counters: () => counters
+      ticketNumbers: async () => {
+        populateQueue();
+        return queue.getQueue();
+      },
+      nowServing: async () => {
+        const ticketData = await Tickets.findOne();
+        return ticketData.nowServing;
+      },
+      lastIssuedTicket: async () => {
+        const ticketData = await Tickets.findOne();
+        return ticketData.lastIssuedTicket;
+      },
+      counter: (_, { id }) => Counters.findByPk(id),
+      counters: () => Counters.findAll()
     },
     
     Mutation: {
-      addTicket: (_, args) => {
-        lastIssuedTicket += 1;
-        queue.enqueue(lastIssuedTicket);
-        return lastIssuedTicket;
+      addTicket: async (_, args) => {
+        const ticketData = await Tickets.findOne();
+        ticketData.lastIssuedTicket += 1;
+        ticketData.ticketNumbers = queue.enqueue(ticketData.lastIssuedTicket);
+        await ticketData.save();
+        return ticketData.lastIssuedTicket;
       },
-      setCounterStatus: (_, { id, status }) => {
-        const counter = counters.find(counter => counter.id === id);
-        if (!counter) {
-          return new Error(`Counter with id ${id} not found.`);
-        }
-        counter.status = status;
-        counter.currentTicket = null;
-        return counter;
-      },
-      setCurrentTicket: (_, { id }) => {
-        const counter = counters.find(counter => counter.id === id);
-        const ticket = queue.dequeue();
-        if(ticket) {
-          counter.currentTicket = ticket;
-          counter.status = "Serving"
-          nowServing = ticket;
+      setCounterStatus: async (_, { id, status }) => {
+        try {
+          const counter = await Counters.findOne({ where: { id } });
+          if (!counter) {
+            return new Error(`Counter with id ${id} not found.`);
+          }
+          await counter.update({ status });
           return counter;
-        } else {
-          counter.currentTicket = null;
-          return new Error('No tickets in the waiting queue')
+        } catch (error) {
+          console.error(error);
+          return new Error("An error occurred while updating the counter status.");
+        }
+      },
+      setCurrentTicket:  async (_, { id }) => {
+        try {
+          const counter = await Counters.findOne({ where: { id } });
+          if (!counter) {
+            return new Error(`Counter with id ${id} not found.`);
+          }
+          const ticket = queue.dequeue();
+          if(ticket) {
+            const ticketData = await Tickets.findOne();
+            await counter.update({ status:"Serving", currentTicket: ticket });
+            ticketData.nowServing = ticket;
+            ticketData.ticketNumbers = queue.getQueue();
+            await ticketData.save();
+            return counter;
+          } else {
+            counter.currentTicket = null;
+            return new Error('No tickets in the waiting queue')
+          }
+        } catch (error) {
+          console.error(error);
+          return new Error("An error occurred while updating the counter status.");
         }
       }
     }

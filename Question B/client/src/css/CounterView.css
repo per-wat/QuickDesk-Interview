@@ -81,15 +81,3 @@
 .counter-box.serving .number p {
     color: var(--font-color-dark);
 }
-
-.counter-box .number p::before {
-    content: "Offline";
-}
-
-.counter-box.online .number p::before {
-    content: "Online";
-}
-
-.counter-box.serving .number p::before {
-    content: "2";
-}

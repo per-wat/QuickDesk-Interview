@@ -11,6 +11,11 @@
     padding-bottom: 20px;
 }
 
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .button-name.online::before {
     content: "Go Online";
 }
@@ -19,7 +24,7 @@
     content: "Go Offline";
 }
 
-.button-name {
+.button-name{
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -66,12 +71,12 @@
     font-size: 18px;
 }
 
-.button-name:focus {
+.button-name:not([disabled]):focus {
     -webkit-box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
 }
 
-.button-name:hover {
+.button-name:not([disabled]):hover {
     -webkit-box-shadow: rgba(45, 35, 66, 0.3) 0 4px 8px, rgba(45, 35, 66, 0.2) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     box-shadow: rgba(45, 35, 66, 0.3) 0 4px 8px, rgba(45, 35, 66, 0.2) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
     -webkit-transform: translateY(-2px);
@@ -79,7 +84,7 @@
     transform: translateY(-2px);
 }
 
-.button-name:active {
+.button-name:not([disabled]):active {
     -webkit-box-shadow: #D6D6E7 0 3px 7px inset;
     box-shadow: #D6D6E7 0 3px 7px inset;
     -webkit-transform: translateY(2px);
