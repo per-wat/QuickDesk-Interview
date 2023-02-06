@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer');
@@ -49,6 +50,7 @@ const server = new ApolloServer({
       },
     },
   ],
+  subscriptions: { path: '/'},
 });
 
 (async () => {
