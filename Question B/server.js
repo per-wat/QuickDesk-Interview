@@ -51,13 +51,16 @@ const server = new ApolloServer({
   ],
 });
 
-startServer = async () => {
-  await server.start()
-  .then(() => {
-    app.use('/graphql', cors(), bodyParser.json(), expressMiddleware(server));
-  })
-}
-startServer();
+(async () => {
+  await server.start();
+  app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  }));
+  app.use('/graphql', bodyParser.json(), expressMiddleware(server));
+})();
 
 const PORT = 4000;
 // Now that our HTTP server is fully set up, we can listen to it.

@@ -74,8 +74,10 @@ class Queue {
 }
 
 const { Counters, Tickets } = require("../models");
+const { PubSub } = require('graphql-subscriptions');
 
 const queue = new Queue();
+const pubsub = new PubSub();
 
 populateQueue = async () => {
   const ticketData = await Tickets.findOne();
@@ -86,12 +88,6 @@ populateQueue = async () => {
 }
 
 populateQueue();
-
-// The current ticket being served
-let nowServing = null;
-
-// The last issued ticket
-let lastIssuedTicket = 0;
 
 // A map of functions which return data for the schema.
 module.exports = {
@@ -116,6 +112,7 @@ module.exports = {
       addTicket: async (_, args) => {
         const ticketData = await Tickets.findOne();
         ticketData.lastIssuedTicket += 1;
+        pubsub.publish('LAST_ISSUED_UPDATED', {updateLastIssued: ticketData.lastIssuedTicket});
         ticketData.ticketNumbers = queue.enqueue(ticketData.lastIssuedTicket);
         await ticketData.save();
         return ticketData.lastIssuedTicket;
@@ -127,6 +124,7 @@ module.exports = {
             return new Error(`Counter with id ${id} not found.`);
           }
           await counter.update({ status });
+          pubsub.publish('COUNTER_UPDATED', {updateCounter: counter});
           return counter;
         } catch (error) {
           console.error(error);
@@ -146,6 +144,8 @@ module.exports = {
             ticketData.nowServing = ticket;
             ticketData.ticketNumbers = queue.getQueue();
             await ticketData.save();
+            pubsub.publish('NOW_SERVE_UPDATED', {updateNowServing: ticketData.nowServing});
+            pubsub.publish('COUNTER_UPDATED', {updateCounter: counter});
             return counter;
           } else {
             counter.currentTicket = null;
@@ -156,5 +156,17 @@ module.exports = {
           return new Error("An error occurred while updating the counter status.");
         }
       }
+    },
+
+    Subscription: {
+      updateCounter: {
+        subscribe: () => pubsub.asyncIterator(['COUNTER_UPDATED'])
+      },
+      updateNowServing: {
+        subscribe: () => pubsub.asyncIterator(['NOW_SERVE_UPDATED'])
+      },
+      updateLastIssued: {
+        subscribe: () => pubsub.asyncIterator(['LAST_ISSUED_UPDATED'])
+      },
     }
   };

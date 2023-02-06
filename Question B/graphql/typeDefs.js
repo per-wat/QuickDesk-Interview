@@ -19,4 +19,10 @@ module.exports = `#graphql
     setCounterStatus(id: ID!, status: String!): Counter!
     setCurrentTicket(id: ID!): Counter!
   }
+
+  type Subscription {
+    updateCounter: Counter
+    updateNowServing: Int
+    updateLastIssued: Int
+  }
 `;

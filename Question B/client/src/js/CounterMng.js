@@ -63,9 +63,9 @@ const CounterMng = React.memo(({id, status, currentTicket}) => {
         <div>
             <div className="counter-box center-box">
                 <div className="counter-name"><p>Counter {id}</p></div>
-                <div className="button-box"><button role="button" className={`button-name ${buttonStatus}`} onClick={toggleClass}></button></div>
-                <div className="button-box"><button role="button" className="button-name" onClick={completeCurr} disabled={offlineDisable}>Complete Current</button></div>
-                <div className="button-box"><button role="button" className="button-name" onClick={callNext}disabled={offlineDisable || serveDisable}>Call Next</button></div>
+                <div className="button-box"><button role="button" className={`button-name ${buttonStatus}`} onClick={toggleClass} disabled={serveDisable}></button></div>
+                <div className="button-box"><button role="button" className="button-name" onClick={completeCurr} disabled={offlineDisable || !serveDisable}>Complete Current</button></div>
+                <div className="button-box"><button role="button" className="button-name" onClick={callNext} disabled={offlineDisable || serveDisable}>Call Next</button></div>
             </div>
         </div>
     )
