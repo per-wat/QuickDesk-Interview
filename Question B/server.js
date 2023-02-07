@@ -50,7 +50,6 @@ const server = new ApolloServer({
       },
     },
   ],
-  subscriptions: { path: '/'},
 });
 
 (async () => {
