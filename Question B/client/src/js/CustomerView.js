@@ -1,8 +1,11 @@
 import { gql, useQuery, useMutation, useSubscription } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import Popup from "reactjs-popup";
 
-import CounterView from "./CounterView.js"
-import "../css/CustomerView.css"
+import CounterView from "./CounterView.js";
+import "../css/CustomerView.css";
+import "../css/Popup.css";
+import 'reactjs-popup/dist/index.css';
 
 const GET_COUNTERS = gql`
   query counters {
@@ -49,10 +52,14 @@ const CustomerView = () => {
     const { data: serveData, error: serverError} = useSubscription(NOW_SERVE_UPDATED);
     const { data: lastData, error: lastError} = useSubscription(LAST_ISSUED_UPDATED);
     const { data: counterData, error: counterError} = useSubscription(COUNTER_UPDATED);
+    const [openPopup, setOpenPopup] = useState(false);
+    const [ticketNumber, setTicketNumber] = useState("");
 
     const [addTicket] = useMutation(ADD_TICKET, {
         update(_, res) {
             console.log(res);
+            setTicketNumber(res.data.addTicket);
+            setOpenPopup(true);
         },
         onError(err){
             console.log(JSON.stringify(err, null, 2));
@@ -83,6 +90,19 @@ const CustomerView = () => {
 
     return(
         <div className="cust-container">
+            <Popup
+                open={openPopup}
+                closeOnDocumentClick
+                onClose={() => setOpenPopup(false)}
+            >
+                <div className="modal-container">
+                <div className="modal-info">
+                    <p>Your ticket number is </p>
+                    <p>{ticketNumber}</p>
+                    <button onClick={() => setOpenPopup(false)}>Close</button>
+                </div>
+                </div>
+            </Popup>
             <div className="cust-box center-box">
                 <div className="cust-header"><h2>Customer View</h2></div>
                 <div className="take-num">

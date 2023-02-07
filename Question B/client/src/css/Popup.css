@@ -1,0 +1,61 @@
+.popup-content {
+    margin: auto;
+    background: var(--text-bg-color);
+    color: var(--text-body-color);
+    width: 0;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.popup-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.modal-header {
+    width: 100%;
+    border-bottom: 1px solid gray;
+    font-size: 18px;
+    text-align: center;
+    padding: 5px 0 5px 0;
+}
+
+.modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.modal-header,
+.modal-container {
+    font-family: 'Avenir Next Rounded', sans-serif;
+}
+
+.modal-img {
+    flex: 2;
+    padding-right: 5px;
+}
+
+.modal-img img {
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 150px;
+    min-height: 150px;
+    object-fit: contain;
+}
+
+.modal-info {
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+    flex: 3;
+    word-wrap: break-word;
+    flex-direction: column;
+}
+
+.modal-info > div p {
+    padding: 0 10px;
+}
