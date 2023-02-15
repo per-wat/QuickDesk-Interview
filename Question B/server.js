@@ -27,7 +27,7 @@ const httpServer = createServer(app);
 // Create our WebSocket server using the HTTP server we just set up.
 const wsServer = new WebSocketServer({
   server: httpServer,
-  path: '/graphql',
+  path: '/',
 });
 // Save the returned server's info so we can shutdown this server later
 const serverCleanup = useServer({ schema }, wsServer);
@@ -54,19 +54,13 @@ const server = new ApolloServer({
 
 (async () => {
   await server.start();
-  app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204
-  }));
-  app.use('/graphql', bodyParser.json(), expressMiddleware(server));
+  app.use('/', cors(), bodyParser.json(), expressMiddleware(server));
 })();
 
 const PORT = 4000;
 // Now that our HTTP server is fully set up, we can listen to it.
 httpServer.listen(PORT, () => {
-  console.log(`Server is now running on http://localhost:${PORT}/graphql`);
+  console.log(`Server is now running on http://localhost:${PORT}/`);
 
   sequelize.authenticate()
     .then(() => console.log("Db connected!"))
