@@ -22,9 +22,7 @@ const COUNTER_UPDATED = gql`
 
 const CounterManagement = () => {
 
-    const { data, loading, error} = useQuery(GET_COUNTERS, {
-        pollInterval: 500,
-    });
+    const { data, loading, error} = useQuery(GET_COUNTERS);
 
     const { data: counterData, error: counterError} = useSubscription(COUNTER_UPDATED);
 

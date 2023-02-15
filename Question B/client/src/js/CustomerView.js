@@ -45,9 +45,7 @@ const COUNTER_UPDATED = gql`
 
 const CustomerView = () => {
 
-    const { data, loading, error} = useQuery(GET_COUNTERS, {
-        pollInterval: 500,
-    });
+    const { data, loading, error} = useQuery(GET_COUNTERS);
 
     const { data: serveData, error: serverError} = useSubscription(NOW_SERVE_UPDATED);
     const { data: lastData, error: lastError} = useSubscription(LAST_ISSUED_UPDATED);
