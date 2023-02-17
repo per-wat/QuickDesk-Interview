@@ -1,9 +1,8 @@
 # Simple Ticket System
 
 This is a simple ticket system with 2 separate view, Customer View and Counter Managment.
-You can check it out [at this link](http://13.212.37.2/).
 
-Or if you want to try it yourself, you can follow the instrucion below for demo.
+If you want to try it yourself, you can follow the instrucion below for demo.
 
 ### Local Host
 
