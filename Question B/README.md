@@ -4,9 +4,7 @@
 
 This system is built using [React](https://reactjs.org/) for frontend, [ApolloGraphQl](https://www.apollographql.com/docs/apollo-server) for the backend server with [MySql](https://www.mysql.com/) database.
 
-Everything is hosted on [AWS](https://aws.amazon.com/console/), using [EC2](https://aws.amazon.com/ec2/?nc2=h_ql_prod_fs_ec2) for the frontend and backend hosting, and [RDS](https://aws.amazon.com/rds/?nc2=h_ql_prod_fs_rds) for database.
-
-Check out the live [demo](http://13.212.185.195/).
+I tried to host on AWS and let it live forever, but it just cost me money so now I'm scared to try hosting somewhere else :sob: :sob: :sob:
 
 ## Local Host
 
